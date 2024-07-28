@@ -5,6 +5,8 @@ import PnrCheck from './components/Dashboard/Pnr-Check';
 import TicketReservationForm from './components/Dashboard/Book-Ticket';
 import PreviousBookings from './components/Dashboard/previous-ticket';
 import Home from './components/Dashboard/Home';
+import Login from './components/Dashboard/Login/login';
+import Register from './components/Dashboard/Login/register';
 
 function App() {
   return (
@@ -16,6 +18,9 @@ function App() {
           <Route path="pnr" element={<PnrCheck />} />
           <Route path="prevbooking" element={<PreviousBookings />} />
         </Route>
+        <Route path="login" element={<Login />} />
+        <Route path="register" element={<Register />} />
+        <Route path="*" element={<div>404 Not Found</div>} />
       </Routes>
     </Router>
   );
