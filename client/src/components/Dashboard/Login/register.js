@@ -1,12 +1,35 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { signup } from '../../services/api.services';
 
-const Register = () => {
-  return (
-    <div>
-      <h2>Register Page</h2>
-      {/* Your sign-up form goes here */}
-    </div>
-  );
+const Signup = () => {
+    const [formData, setFormData] = useState({ email: '', password: '', name: '' });
+    const [message, setMessage] = useState('');
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
+    };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            const response = await signup(formData);
+            setMessage('Signup successful!');
+        } catch (error) {
+            setMessage(`Error: ${error}`);
+        }
+    };
+
+    return (
+        <form onSubmit={handleSubmit}>
+            <h2>Signup</h2>
+            <input type="text" name="name" placeholder="Name" value={formData.name} onChange={handleChange} />
+            <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} />
+            <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} />
+            <button type="submit">Signup</button>
+            {message && <p>{message}</p>}
+        </form>
+    );
 };
 
-export default Register;
+export default Signup;
