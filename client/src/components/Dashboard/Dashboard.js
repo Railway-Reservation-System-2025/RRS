@@ -1,13 +1,10 @@
 import React, { memo } from 'react';
+import { Outlet } from 'react-router-dom';
 import Navbar from './Navbar/Navbar';
 import Sidebar from './Sidebar/Sidebar';
-import TicketReservationForm from './Book-Ticket';
-import PnrCheck from './Pnr-Check';
 import trainimage from '../../images/bg-train.jpg';
-import PreviousBookings from './previous-ticket';
 
 const Dashboard = memo(() => {
-  
   return (
     <div className="h-screen flex flex-col">
       <Navbar />
@@ -15,8 +12,8 @@ const Dashboard = memo(() => {
         <Sidebar />
         <div className="relative w-full bg-black h-full">
           <img src={trainimage} alt="background" className="absolute inset-0 object-cover w-full h-full" />
-          <div className="relative z-10">
-          <PreviousBookings />
+          <div className="relative z-10 p-4">
+            <Outlet />
           </div>
         </div>
       </div>
