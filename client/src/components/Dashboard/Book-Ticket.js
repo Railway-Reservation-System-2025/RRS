@@ -1,13 +1,34 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const BookTicket = () => {
   const [from, setFrom] = useState('');
   const [to, setTo] = useState('');
   const [date, setDate] = useState(new Date());
+  const [response, setResponse] = useState(null);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({ from, to, date });
+    
+    // Format the date to YYYY-MM-DD
+    const formattedDate = date.toISOString().split('T')[0];
+    
+    try {
+      const result = await axios.get('http://localhost:4000/api/trains', {
+        params: {
+          fromStationCode: from,
+          toStationCode: to,
+          dateOfJourney: formattedDate
+        }
+      });
+      setResponse(result.data);
+      setError('');
+    } catch (err) {
+      setResponse(null);
+      setError('Error fetching train information. Please try again.');
+      console.error(err);
+    }
   };
 
   const today = new Date().toISOString().split('T')[0]; // Get today's date in YYYY-MM-DD format
@@ -25,6 +46,7 @@ const BookTicket = () => {
               className='w-full max-w-[500px] h-[40px] rounded-lg text-black text-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 pl-3'
               value={from}
               onChange={(e) => setFrom(e.target.value)}
+              required
             />
           </div>
           <div className='flex flex-col'>
@@ -35,6 +57,7 @@ const BookTicket = () => {
               className='w-full max-w-[500px] h-[40px] rounded-lg text-black text-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 pl-3'
               value={to}
               onChange={(e) => setTo(e.target.value)}
+              required
             />
           </div>
           <div className='flex flex-col'>
@@ -45,6 +68,7 @@ const BookTicket = () => {
               value={date.toISOString().split('T')[0]}
               onChange={(e) => setDate(new Date(e.target.value))}
               min={today} // Restrict to future dates
+              required
             />
           </div>
           <button
@@ -53,6 +77,13 @@ const BookTicket = () => {
           >
             Book Ticket
           </button>
+          {response && (
+            <div className='mt-4'>
+              <h3 className='text-lg font-semibold'>Train Information</h3>
+              <pre className='bg-gray-100 p-4 rounded-lg'>{JSON.stringify(response, null, 2)}</pre>
+            </div>
+          )}
+          {error && <p className='text-red-500 mt-4'>{error}</p>}
         </form>
       </div>
     </div>
