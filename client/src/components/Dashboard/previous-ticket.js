@@ -1,58 +1,24 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { getPreviousBookings } from '../services/api.services';
 
 const PreviousBookings = () => {
-  // Example data; replace with actual data from your backend
-  const bookings = [
-    {
-      trainName: 'Express 101',
-      trainNo: 'EX101',
-      pnrNo: '1234567890',
-      seatNos: ['A1', 'A2'],
-      passengerNames: ['John Doe', 'Jane Smith'],
-    },
-    {
-      trainName: 'Superfast 202',
-      trainNo: 'SF202',
-      pnrNo: '0987654321',
-      seatNos: ['B1'],
-      passengerNames: ['Alice Brown'],
-    },
-    {
-        trainName: 'Superfast 202',
-        trainNo: 'SF202',
-        pnrNo: '0987654321',
-        seatNos: ['B1'],
-        passengerNames: ['Alice Brown'],
-      },
-      {
-        trainName: 'Superfast 202',
-        trainNo: 'SF202',
-        pnrNo: '0987654321',
-        seatNos: ['B1'],
-        passengerNames: ['Alice Brown'],
-      },
-      {
-        trainName: 'Superfast 202',
-        trainNo: 'SF202',
-        pnrNo: '0987654321',
-        seatNos: ['B1'],
-        passengerNames: ['Alice Brown'],
-      },
-      {
-        trainName: 'Superfast 202',
-        trainNo: 'SF202',
-        pnrNo: '0987654321',
-        seatNos: ['B1'],
-        passengerNames: ['Alice Brown'],
-      },
-      {
-        trainName: 'Superfast 202',
-        trainNo: 'SF202',
-        pnrNo: '0987654321',
-        seatNos: ['B1'],
-        passengerNames: ['Alice Brown'],
-      },
-  ];
+  const [bookings, setBookings] = useState([]);
+
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user && user.token) {
+          const response = await getPreviousBookings(user.token);
+          setBookings(response);
+        }
+      } catch (error) {
+        console.error('Error fetching bookings:', error);
+      }
+    };
+
+    fetchBookings();
+  }, []);
 
   return (
     <div className="p-6 w-[800px] h-[500px] ml-[550px] rounded-lg mt-36 bg-opacity-70 bg-white">

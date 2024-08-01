@@ -1,10 +1,19 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import imageLogo from '../../../images/user-logo.png';
 
 const NavBar = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userName, setUserName] = useState('John Doe');
   const navigate = useNavigate();
-  const userName = "John Doe";
+
+  useEffect(() => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user) {
+      setIsAuthenticated(true);
+      setUserName(user.name); // Assuming the user object has a 'name' property
+    }
+  }, []);
 
   const handleLoginClick = () => {
     navigate('/login');
@@ -12,6 +21,13 @@ const NavBar = () => {
 
   const handleSignUpClick = () => {
     navigate('/register');
+  };
+
+  const handleLogoutClick = () => {
+    localStorage.removeItem('user');
+    setIsAuthenticated(false);
+    setUserName('John Doe'); // Reset to default name
+    navigate('/');
   };
 
   return (
@@ -26,12 +42,20 @@ const NavBar = () => {
       </div>
 
       <div className="flex items-center gap-2">
-        <button onClick={handleLoginClick} className="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md">
-          Login
-        </button>
-        <button onClick={handleSignUpClick} className="bg-gray-300 text-black px-4 py-2 rounded-md shadow-md">
-          Sign Up
-        </button>
+        {!isAuthenticated ? (
+          <>
+            <button onClick={handleLoginClick} className="bg-blue-500 text-white px-4 py-2 rounded-md shadow-md">
+              Login
+            </button>
+            <button onClick={handleSignUpClick} className="bg-gray-300 text-black px-4 py-2 rounded-md shadow-md">
+              Sign Up
+            </button>
+          </>
+        ) : (
+          <button onClick={handleLogoutClick} className="bg-red-500 text-white px-4 py-2 rounded-md shadow-md">
+            Logout
+          </button>
+        )}
       </div>
     </div>
   );
